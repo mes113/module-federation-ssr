@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24.11.1"
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run format:check
+      - run: npm run build
+      - run: npm run typecheck
+      - run: npm run test:remotes
+      - run: npm run test:remotes:dev
+      - run: npm run build:edge
+      - name: Verify single-origin runtime
+        shell: bash
+        run: |
+          node scripts/single-origin.mjs > /tmp/edge.log 2>&1 &
+          edge_pid=$!
+          trap 'kill "$edge_pid" 2>/dev/null || true; cat /tmp/edge.log' EXIT
+          for attempt in $(seq 1 60); do
+            if curl --max-time 2 -fsS http://127.0.0.1:3080/ > /tmp/edge-ready.html && grep -q 'data-remote="cart"' /tmp/edge-ready.html; then
+              break
+            fi
+            sleep 1
+          done
+          npm run test:edge

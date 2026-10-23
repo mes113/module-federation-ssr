@@ -15,6 +15,10 @@
     "strict": true,
     "target": "ES2022",
     "types": ["node"],
-    "verbatimModuleSyntax": true
+    "verbatimModuleSyntax": true,
+    "paths": {
+      "tanstack_rsbuild_ssr_remote/*": ["./@mf-types/tanstack_rsbuild_ssr_remote/*"],
+      "tanstack_rsbuild_cart/*": ["./@mf-types/tanstack_rsbuild_cart/*"]
+    }
   }
 }

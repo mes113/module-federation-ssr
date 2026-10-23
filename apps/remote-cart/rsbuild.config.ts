@@ -1,4 +1,3 @@
-import { federationServerFunctions } from '../../packages/federation-server-functions/rsbuild.mjs';
 import { defineConfig } from "@rsbuild/core";
 import { pluginReact } from "@rsbuild/plugin-react";
 import { tanstackStart } from "@tanstack/react-start/plugin/rsbuild";
@@ -13,12 +12,22 @@ export default defineConfig({
   },
   plugins: [
     pluginReact(),
-    tanstackStart({ serverFns: { base: '/_federation/cart/_serverFn' } }),
+    tanstackStart({ serverFns: { base: "/_federation/cart/_serverFn" } }),
     ...tanstackStartModuleFederation({
+      serverFunctions: {
+        remote: {
+          name: "cart",
+          originEnv: "CART_INTERNAL_ORIGIN",
+          origin: "http://127.0.0.1:3006",
+        },
+      },
       federation: {
         dev: { disableDynamicRemoteTypeHints: true },
-        dts: false,
-        exposes: { "./StatusCard": "./src/components/StatusCard.tsx", "./probe": "./src/probe.functions.ts" },
+        dts: { generateTypes: { abortOnError: true }, consumeTypes: false },
+        exposes: {
+          "./StatusCard": "./src/components/StatusCard.tsx",
+          "./probe": "./src/probe.functions.ts",
+        },
         name: "tanstack_rsbuild_cart",
         // Workspace dependencies declare "workspace:*", which is not a semver range.
         shared: { "example-host-context": { requiredVersion: "*", singleton: true } },
@@ -27,6 +36,5 @@ export default defineConfig({
       // Rsbuild host can render this card on the server.
       server: true,
     }),
-    federationServerFunctions({ remote: { name: 'cart', origin: 'http://127.0.0.1:3006' } }),
   ],
 });

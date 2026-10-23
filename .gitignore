@@ -2,3 +2,14 @@ node_modules/
 dist/
 *.log
 .test-results/
+
+# Generated federation declarations and compiler scratch files
+**/@mf-types/
+**/node_modules/.federation/
+
+# Local configuration and packaged artifacts
+.env
+.env.*
+!.env.example
+*.tgz
+.DS_Store

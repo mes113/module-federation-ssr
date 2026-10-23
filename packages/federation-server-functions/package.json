@@ -1,1 +1,0 @@
-{"name":"@ssr-lab/federation-server-functions","version":"0.0.1","type":"module","exports":{".":"./rsbuild.mjs","./gateway":"./gateway.mjs"},"peerDependencies":{"@rsbuild/core":"2.x","@tanstack/react-start":"1.169.x","@tanstack/start-plugin-core":"1.171.52"}}

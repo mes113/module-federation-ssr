@@ -3,9 +3,13 @@ import { useEffect, useState } from "react";
 import "./StatusCard.css";
 import { remoteProbe } from "../probe.functions";
 
-export default function StatusCard({ action }: { action?: (value: number) => Promise<{ value: number }> }) {
-  const [rpc, setRpc] = useState('Not called');
-  const [nativeRpc, setNativeRpc] = useState('Not called');
+export default function StatusCard({
+  action,
+}: {
+  action?: (value: number) => Promise<{ value: number }>;
+}) {
+  const [rpc, setRpc] = useState("Not called");
+  const [nativeRpc, setNativeRpc] = useState("Not called");
   const hostName = useHostName();
   const [count, setCount] = useState(0);
   const [hydrated, setHydrated] = useState(false);
@@ -23,9 +27,33 @@ export default function StatusCard({ action }: { action?: (value: number) => Pro
       <h2>Cart: server-rendered by a second Rsbuild remote.</h2>
       <p>The host's server loaded this card from the remote's async-node container.</p>
       <p className="host-name">Host: {hostName}</p>
-      <button onClick={async () => { try { if (!action) throw new Error('No host action'); const result = await action(count); setCount(result.value); setRpc('Host server function OK'); } catch (e) { setRpc(String(e)); } }}>Call host server function</button>
+      <button
+        onClick={async () => {
+          try {
+            if (!action) throw new Error("No host action");
+            const result = await action(count);
+            setCount(result.value);
+            setRpc("Host server function OK");
+          } catch (e) {
+            setRpc(String(e));
+          }
+        }}
+      >
+        Call host server function
+      </button>
       <p data-testid="host-rpc">{rpc}</p>
-      <button onClick={async () => { try { const result = await remoteProbe(); setNativeRpc(JSON.stringify(result)); } catch (e) { setNativeRpc('Remote RPC failed: ' + String(e)); } }}>Call remote native server function</button>
+      <button
+        onClick={async () => {
+          try {
+            const result = await remoteProbe();
+            setNativeRpc(JSON.stringify(result));
+          } catch (e) {
+            setNativeRpc("Remote RPC failed: " + String(e));
+          }
+        }}
+      >
+        Call remote native server function
+      </button>
       <p data-testid="remote-rpc">{nativeRpc}</p>
       <button type="button" onClick={() => setCount((value) => value + 1)}>
         Remote count {count}

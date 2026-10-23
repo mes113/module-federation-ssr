@@ -7,15 +7,23 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "npm run build -w apps/remote && npm run build -w apps/remote-cart && npm run build -w apps/host",
+    "build": "node scripts/build.mjs",
     "dev": "node scripts/serve.mjs dev",
     "preview": "node scripts/serve.mjs preview",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "test": "node --test test/*.test.mjs",
     "test:remotes": "node scripts/check-remotes.mjs preview",
-    "test:remotes:dev": "node scripts/check-remotes.mjs dev"
+    "test:remotes:dev": "node scripts/check-remotes.mjs dev",
+    "build:edge": "SINGLE_ORIGIN=1 npm run build",
+    "start:edge": "node scripts/single-origin.mjs",
+    "test:edge": "node test/single-origin.mjs",
+    "build:fork": "npm run build -w packages/tanstack",
+    "predev": "npm run build:fork",
+    "format": "biome format --write .",
+    "format:check": "biome format ."
   },
   "devDependencies": {
+    "@biomejs/biome": "2.6.2",
     "playwright": "1.63.0"
   }
 }
