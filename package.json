@@ -1,0 +1,21 @@
+{
+  "name": "ssr-federation-lab",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build -w apps/remote && npm run build -w apps/remote-cart && npm run build -w apps/host",
+    "dev": "node scripts/serve.mjs dev",
+    "preview": "node scripts/serve.mjs preview",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test": "node --test test/*.test.mjs",
+    "test:remotes": "node scripts/check-remotes.mjs preview",
+    "test:remotes:dev": "node scripts/check-remotes.mjs dev"
+  },
+  "devDependencies": {
+    "playwright": "1.63.0"
+  }
+}
